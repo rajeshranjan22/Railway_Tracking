@@ -67,6 +67,17 @@ export const searchTrains = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
+export const getAllLiveStatus = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { default: TrainSimulationService } = await import('../services/simulationService');
+    const allSims = Array.from((TrainSimulationService.getInstance() as any).activeSimulations.values());
+    
+    res.json({ success: true, count: allSims.length, data: allSims });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getLiveStatus = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { trainNumber, date } = req.params;
@@ -88,7 +99,11 @@ export const getLiveStatus = async (req: Request, res: Response, next: NextFunct
           // Map to match the expected format
           latitude: liveSim.currentLat,
           longitude: liveSim.currentLon,
-          eta: liveSim.eta
+          eta: liveSim.eta,
+          routeCoordinates: liveSim.routeStops.map((stop: any) => [
+            stop.station.coordinates.latitude,
+            stop.station.coordinates.longitude
+          ])
         } 
       });
     }

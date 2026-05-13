@@ -181,6 +181,10 @@ class TrainSimulationService {
         delay: sim.delay,
         nextStation: (nextStop.station as any).name,
         eta: Math.round(etaMinutes),
+        routeCoordinates: sim.routeStops.map((stop: any) => [
+          stop.station.coordinates.latitude,
+          stop.station.coordinates.longitude
+        ])
       });
     }
   }

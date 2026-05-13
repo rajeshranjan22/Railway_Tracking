@@ -9,6 +9,7 @@ import Register from '../pages/Register';
 import TrainSearch from '../pages/TrainSearch';
 import LiveStatus from '../pages/LiveStatus';
 import AdminDashboard from '../pages/AdminDashboard';
+import GlobalMap from '../pages/GlobalMap';
 import ForgotPassword from '../pages/ForgotPassword';
 import ResetPassword from '../pages/ResetPassword';
 import VerifyEmail from '../pages/VerifyEmail';
@@ -26,6 +27,7 @@ const AppRoutes: React.FC = () => {
         <Route index element={<Home />} />
         <Route path="trains" element={<TrainSearch />} />
         <Route path="live-status" element={<LiveStatus />} />
+        <Route path="network-map" element={<GlobalMap />} />
         <Route path="login" element={!isAuthenticated ? <Login /> : <Navigate to="/" />} />
         <Route path="register" element={!isAuthenticated ? <Register /> : <Navigate to="/" />} />
         <Route path="forgot-password" element={!isAuthenticated ? <ForgotPassword /> : <Navigate to="/" />} />

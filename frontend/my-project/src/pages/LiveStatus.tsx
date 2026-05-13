@@ -162,7 +162,13 @@ const LiveStatus: React.FC = () => {
               </div>
             </div>
           </div>
-          <TrainMap lat={liveData.lat} lon={liveData.lon} trainName={liveData.trainName} />
+          <TrainMap 
+            lat={liveData.lat} 
+            lon={liveData.lon} 
+            trainName={liveData.trainName} 
+            delay={liveData.delay}
+            routeCoordinates={liveData.routeCoordinates}
+          />
         </motion.div>
       )}
 
