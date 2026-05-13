@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - MONGODB_URI=mongodb://mongodb:27017/railway-tracking
+      - NODE_ENV=production
+      - CLIENT_URL=http://localhost:80
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
+    depends_on:
+      - mongodb
+
+  frontend:
+    build: ./frontend/my-project
+    ports:
+      - "80:80"
+    environment:
+      - VITE_API_URL=http://localhost:5000/api
+      - VITE_SOCKET_URL=http://localhost:5000
+    depends_on:
+      - backend
+
+volumes:
+  mongodb_data:
