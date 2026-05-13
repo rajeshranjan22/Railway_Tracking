@@ -52,6 +52,8 @@ mongoose.connect(MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch((err: Error) => console.error('MongoDB connection error:', err));
 
+import TrainSimulationService from './services/simulationService';
+
 // Socket.io for Real-time tracking
 io.on('connection', (socket: any) => {
   console.log('A user connected:', socket.id);
@@ -64,6 +66,13 @@ io.on('connection', (socket: any) => {
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
   });
+});
+
+// Initialize and start Simulation Engine
+const simulationService = TrainSimulationService.getInstance();
+simulationService.init(io);
+mongoose.connection.once('open', () => {
+  simulationService.startSimulation();
 });
 
 // Swagger Configuration

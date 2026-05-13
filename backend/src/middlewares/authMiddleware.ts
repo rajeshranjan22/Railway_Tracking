@@ -26,10 +26,11 @@ export const protect = async (req: AuthRequest, res: Response, next: NextFunctio
   }
 };
 
-export const admin = (req: AuthRequest, res: Response, next: NextFunction) => {
-  if (req.user && req.user.role === 'admin') {
+export const authorizeRoles = (...roles: string[]) => {
+  return (req: AuthRequest, res: Response, next: NextFunction) => {
+    if (!req.user || !roles.includes(req.user.role)) {
+      return res.status(403).json({ message: `Role (${req.user?.role || 'none'}) is not allowed to access this resource` });
+    }
     next();
-  } else {
-    res.status(403).json({ message: 'Not authorized as an admin' });
-  }
+  };
 };

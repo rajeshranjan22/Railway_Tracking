@@ -6,9 +6,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Mail, Lock, LogIn, ArrowRight } from 'lucide-react';
+import { GoogleLogin } from '@react-oauth/google';
 import { Button } from '../components/Button';
 import { setCredentials, setLoading } from '../redux/slices/authSlice';
 import api from '../services/api';
+import { authService } from '../services/authService';
 import type { RootState } from '../redux/store';
 
 const loginSchema = z.object({
@@ -36,6 +38,20 @@ const Login: React.FC = () => {
       navigate('/');
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Login failed');
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    dispatch(setLoading(true));
+    try {
+      const response = await authService.googleLogin(credentialResponse.credential);
+      dispatch(setCredentials(response.data));
+      toast.success('Logged in with Google successfully!');
+      navigate('/');
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Google Login failed');
     } finally {
       dispatch(setLoading(false));
     }
@@ -96,6 +112,19 @@ const Login: React.FC = () => {
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
           </form>
+
+          <div className="mt-6 flex items-center justify-center">
+            <div className="w-full border-t border-gray-200 dark:border-gray-700"></div>
+            <span className="px-3 text-sm text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-900">OR</span>
+            <div className="w-full border-t border-gray-200 dark:border-gray-700"></div>
+          </div>
+
+          <div className="mt-6 flex justify-center">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => toast.error('Google Login failed')}
+            />
+          </div>
 
           <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
             Don't have an account?{' '}

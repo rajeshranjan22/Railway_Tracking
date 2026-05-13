@@ -70,6 +70,29 @@ export const searchTrains = async (req: Request, res: Response, next: NextFuncti
 export const getLiveStatus = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { trainNumber, date } = req.params;
+    
+    // Check if there's an active simulation for this train
+    const { default: TrainSimulationService } = await import('../services/simulationService');
+    const liveSim = await TrainSimulationService.getInstance().getActiveSimulation(trainNumber);
+
+    if (liveSim) {
+      return res.json({ 
+        success: true, 
+        data: {
+          train: { trainNumber: liveSim.trainNumber, trainName: liveSim.trainName },
+          currentStatus: liveSim.status,
+          delayInMinutes: liveSim.delay,
+          weather: liveSim.weather,
+          speed: liveSim.speed,
+          lastUpdated: new Date(liveSim.lastUpdate).toISOString(),
+          // Map to match the expected format
+          latitude: liveSim.currentLat,
+          longitude: liveSim.currentLon,
+          eta: liveSim.eta
+        } 
+      });
+    }
+
     const train = await Train.findOne({ trainNumber });
 
     if (!train) {

@@ -59,15 +59,27 @@ const Navbar: React.FC = () => {
                     <User className="h-6 w-6" />
                     <span className="text-sm font-medium">{user?.name}</span>
                   </button>
-                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-gray-100 dark:border-gray-700">
+                  <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-gray-100 dark:border-gray-700">
                     <Link to="/dashboard" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Dashboard</Link>
                     <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Profile</Link>
-                    {user?.role === 'admin' && (
+                    {(user?.role === 'admin' || user?.role === 'superadmin') && (
                       <Link to="/admin" className="block px-4 py-2 text-sm text-blue-600 font-semibold hover:bg-gray-100 dark:hover:bg-gray-700">Admin Panel</Link>
                     )}
-                    <button onClick={handleLogout} className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20">
+                    <button onClick={handleLogout} className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                       <LogOut className="h-4 w-4" />
                       Logout
+                    </button>
+                    <button onClick={async () => {
+                      try {
+                        const { authService } = await import('../services/authService');
+                        await authService.logoutAll();
+                        handleLogout();
+                      } catch (error) {
+                        console.error('Logout all devices failed', error);
+                      }
+                    }} className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 border-t border-gray-100 dark:border-gray-700">
+                      <LogOut className="h-4 w-4" />
+                      Logout All Devices
                     </button>
                   </div>
                 </div>

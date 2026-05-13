@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { createStation, createTrain, createRoute, updateSchedule, getAnalytics } from '../controllers/adminController';
-import { protect, admin } from '../middlewares/authMiddleware';
+import { protect, authorizeRoles } from '../middlewares/authMiddleware';
 
 const router = Router();
 
 // Apply protection to all admin routes
 router.use(protect);
-router.use(admin);
+router.use(authorizeRoles('superadmin', 'admin'));
 
 router.post('/stations', createStation);
 router.post('/trains', createTrain);

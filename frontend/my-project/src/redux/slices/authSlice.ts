@@ -5,7 +5,8 @@ interface User {
   id: string;
   name: string;
   email: string;
-  role: 'admin' | 'user';
+  role: 'superadmin' | 'admin' | 'station_manager' | 'user';
+  isEmailVerified?: boolean;
 }
 
 interface AuthState {
