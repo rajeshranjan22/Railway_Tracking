@@ -88,19 +88,5 @@ railway-tracking/
    npm run dev       # Start Vite dev server
    ```
 
-## 🔌 API Documentation
-
-Once the backend is running, visit:
-`http://localhost:5000/api-docs`
-
-## 🐳 Running with Docker
-
-```bash
-docker-compose up --build
-```
-
-## 📜 License
-This project is licensed under the MIT License.
-
 ---
-Built with ❤️ by **Antigravity**
+Built with ❤️ by **RJ**
